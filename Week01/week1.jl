@@ -110,7 +110,7 @@ d = Normal(0,1)
 samples = 1000
 kurts = Vector{Float64}(undef,samples)
 Threads.@threads for i in 1:samples
-    kurts[i] = kurtosis(rand(d,100))
+    kurts[i] = kurtosis(rand(d,100000))
 end
 
 #summary statistics
