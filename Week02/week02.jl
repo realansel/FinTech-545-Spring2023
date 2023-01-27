@@ -282,7 +282,7 @@ end
 println(@sprintf("Mean and Var of Y: %.2f, %.4f",mean(y),var(y)))
 println(@sprintf("Expected values Y: %.2f, %.4f",1.0,(1+.5^2)*.01))
 
-# plot_ts(y,imgName="ma1_acf_pacf.png",title="MA 1")
+plot_ts(y,imgName="ma1_acf_pacf.png",title="MA 1")
 
 ma1 = SARIMA(y,order=(0,0,1),include_mean=true)
 
