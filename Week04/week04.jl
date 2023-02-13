@@ -31,16 +31,19 @@ plot!(x2, df.pdf[1:size(x2,1)],legend=false, fill=(0,.5,:red), linecolor=:black,
 
 
 #Delta Normal VaR Example
-
 A = [1,8,20]
 P = [7,10]
-H = [10,20,5]
-PV = A'*H
+Q = [10,20,5]
+PV = A'*Q
 dP1 = [0.5,1,0]
 dP2 = [0,0,1]
-dR1 = P[1]/PV * dP1'*H
-dR2 = P[2]/PV * dP2'*H
+covar = [0.01 0.0075
+         0.0075 0.0225]
+
+dR1 = P[1]/PV * dP1'*Q
+dR2 = P[2]/PV * dP2'*Q
 ∇ = [dR1, dR2]
+
 σ = sqrt(∇'*covar*∇)
 var = -PV*quantile(Normal(),0.05)*σ
 varPct = var/PV
