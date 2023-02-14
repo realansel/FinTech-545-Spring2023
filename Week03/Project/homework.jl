@@ -10,9 +10,18 @@ using CSV
 #Problem 1
 #Read data and drop the column with dates
 rets = CSV.read("Project/DailyReturn.csv",DataFrame)
+filter!(r->!ismissing(r.SPY), rets)
+select!(rets,Not(:Column1))
 nm = names(rets)
 nm = nm[nm.!="Column1"]
 
+for n in nm
+    # println(n)
+    if typeof(rets[1,n]) <:  InlineString
+        println("Running $n")
+        rets[!,n] = parse.(Float64,rets[:,n])
+    end
+end
 
 #Function to calculate expoentially weighted covariance.  
 function ewCovar(x,λ)
@@ -204,7 +213,7 @@ function higham_nearestPSD(pc,W=nothing, epsilon=1e-9,maxIter=100,tol=1e-9)
         # print("Xk: "); display(Xk)
         # print("deltaS: "); display(deltaS)
 
-        if norm - norml < tol && minEigVal > -epsilon
+        if abs(norm - norml) < tol && minEigVal > -epsilon
             # Norm converged and matrix is at least PSD
             break
         end
