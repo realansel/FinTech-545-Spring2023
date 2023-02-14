@@ -30,23 +30,6 @@ plot!(x2, df.pdf[1:size(x2,1)],legend=false, fill=(0,.5,:red), linecolor=:black,
 
 
 
-#Delta Normal VaR Example
-A = [1,8,20]
-P = [7,10]
-Q = [10,20,5]
-PV = A'*Q
-dP1 = [0.5,1,0]
-dP2 = [0,0,1]
-covar = [0.01 0.0075
-         0.0075 0.0225]
-
-dR1 = P[1]/PV * dP1'*Q
-dR2 = P[2]/PV * dP2'*Q
-∇ = [dR1, dR2]
-
-σ = sqrt(∇'*covar*∇)
-var = -PV*quantile(Normal(),0.05)*σ
-varPct = var/PV
 
 #Unlikely Events
 rets = CSV.read("DailyReturn.csv",DataFrame)
@@ -149,6 +132,24 @@ println("2q(P1) >= q(P1+P2) -- $(2cost*stdP1 >= 2cost*stdP)")
 
 
 
+#Delta Normal VaR Example
+A = [1,8,20]
+P = [7,10]
+Q = [10,20,5]
+PV = A'*Q
+dP1 = [0.5,1,0]
+dP2 = [0,0,1]
+covar = [0.01 0.0075
+         0.0075 0.0225]
+
+dR1 = P[1]/PV * dP1'*Q
+dR2 = P[2]/PV * dP2'*Q
+∇ = [dR1, dR2]
+
+σ = sqrt(∇'*covar*∇)
+var = -PV*quantile(Normal(),0.05)*σ
+varPct = var/PV
+
 
 
 
@@ -245,7 +246,7 @@ pVals = sim_prices*vHoldings
 sort!(pVals)
 
 n = size(returns,1)
-a=convert(Int64,.05*n)
+a=convert(Int64,floor(.05*n))
 VaR = PV - pVals[a]
 println("Historical VaR ")
 println("Current Portfolio Value: $PV")
