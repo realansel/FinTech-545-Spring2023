@@ -255,7 +255,7 @@ println("Historical VaR ")
 println("Current Portfolio Value: $PV")
 println("Current Portfolio VaR: $VaR")
 
-#KDE - Get bandwidth and use a Normal Kernel 
+#KDE - Get bandwidth and use a N    ormal Kernel 
 #not super efficient but is generally more accurate
 bw = KernelDensity.default_bandwidth(pVals) 
 
