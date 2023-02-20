@@ -11,7 +11,6 @@ using CSV
 #Read data and drop the column with dates
 rets = CSV.read("Project/DailyReturn.csv",DataFrame)
 filter!(r->!ismissing(r.SPY), rets)
-select!(rets,Not(:Column1))
 nm = names(rets)
 nm = nm[nm.!="Column1"]
 
