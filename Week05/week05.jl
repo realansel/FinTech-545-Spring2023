@@ -220,7 +220,7 @@ R_spearman = corspearman(Z)
 corspearman(U)
 
 #Simulate using the Copula
-NSim = 100000
+NSim = 10000
 #simulate with Pearson Correlation
 copula = MvNormal(fill(0,3),R)
 pearson = rand(copula,NSim)'

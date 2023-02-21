@@ -24,6 +24,7 @@ returns = return_calculate(prices,dateColumn="Date")
 
 nms = names(returns)
 nms = nms[nms.!="Date"]
+nms = nms[nms.!="PLD"]
 #remove date column
 returns = returns[!,nms]
 
