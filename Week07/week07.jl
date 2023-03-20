@@ -10,7 +10,7 @@ using LinearAlgebra
 using JuMP
 using Ipopt
 
-include("../Week06/Project/gbsm.jl")
+include("../library/gbsm.jl")
 
 
 function bt_american(call::Bool, underlying,strike,ttm,rf,b,ivol,N)
@@ -47,7 +47,7 @@ end
 bt_american(false, 100,100,.5,.08,.08,.3,2)
 
 bt_american(false, 100,100,.5,.08,.08,.3,100)
-gbsm(false, 100,100,.5,.08,.08,.3)
+gbsm(false, 100,100,.5,.08,.08,.3).value
 
 
 
@@ -124,12 +124,12 @@ ttm = 15/255
 rf = 0.0025
 p = 2.5
 
-f(iv) = gbsm(true,S,X,ttm,rf,rf,iv) - p
+f(iv) = gbsm(true,S,X,ttm,rf,rf,iv).value - p
 implied_vol = find_zero(f,0.2)
 
 nSim = 5000
 pnl = Vector{Float64}(undef,nSim)
-include("../Week05/RiskStats.jl")
+include("../library/RiskStats.jl")
 
 #1 Day change, need to update the TTM
 ttm_new = 14/255
@@ -139,7 +139,7 @@ r = rand(Normal(0,implied_vol/sqrt(255)),nSim)
 #Profit and loss
 #100 options short
 # Each long option PNL is new option value minus the starting value
-pnl = -100*(gbsm.(true,S*(1 .+r),X,ttm_new,rf,rf,implied_vol) .- 2.5)
+pnl = -100*([r.value for r in gbsm.(true,S*(1 .+r),X,ttm_new,rf,rf,implied_vol)] .- 2.5)
 
 #Calculate the VaR and ES
 var_unhedged = VaR(pnl)
@@ -191,7 +191,7 @@ end
 
 returns = [i for i in 0.03:.001:.05]
 optim_portfolios = DataFrame(optimize_risk.(returns))
-plot(optim_portfolios.risk, optim_portfolios.R, legend=:bottomright, label="Efficient Frontier", xlabel="Risk - Variance", ylabel="Portfolio Expected Return")
+plot(sqrt.(optim_portfolios.risk), optim_portfolios.R, legend=:bottomright, label="Efficient Frontier", xlabel="Risk - SD", ylabel="Portfolio Expected Return")
 
 # w = [i for i in 0:.1:1.5]
 # returns = .1*w .+ .05*(1 .-w)
@@ -200,10 +200,10 @@ plot(optim_portfolios.risk, optim_portfolios.R, legend=:bottomright, label="Effi
 # scatter!((.16,.1), label="Investment A")
 
 #Sharpe Ratios
-optim_portfolios[!,:SR] = (optim_portfolios.R .- 0.035)./optim_portfolios.risk
+optim_portfolios[!,:SR] = (optim_portfolios.R .- 0.03)./sqrt.(optim_portfolios.risk)
 maxSR = argmax(optim_portfolios.SR)
 maxSR_ret=optim_portfolios.R[maxSR]
-maxSR_risk=optim_portfolios.risk[maxSR]
+maxSR_risk=sqrt(optim_portfolios.risk[maxSR])
 
 println("Portfolio Weights at the Maximum Sharpe Ratio: $(optim_portfolios.weights[maxSR])")
 println("Portfolio Return : $maxSR_ret")
@@ -215,8 +215,8 @@ println("Portfolio SR     : $(optim_portfolios.SR[maxSR])")
 
 
 
-w = [i for i in 0:.1:3.5]
-returns = maxSR_ret*w .+ .035*(1 .-w)
+w = [i for i in 0:.1:2]
+returns = maxSR_ret*w .+ .03*(1 .-w)
 risks = maxSR_risk*w
 plot!(risks,returns,label="",color=:red)
 scatter!((maxSR_risk,maxSR_ret),label="Max SR Portfolio")
