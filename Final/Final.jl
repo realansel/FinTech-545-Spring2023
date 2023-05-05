@@ -35,7 +35,7 @@ println(returns)
 
 select!(returns,Not(:Date))
 
-covar = missing_cov(Matrix(returns),skipMiss=false,fun=cor)
+covar = missing_cov(Matrix(returns),skipMiss=false,fun=cov)
 
 println(DataFrame(covar,:auto))
 
