@@ -22,7 +22,7 @@ include("../library/missing_cov.jl")
 include("../library/expost_factor.jl")
 
 
-user = "Zixuan Wei"
+user = "Dominic Pazzula"
 
 run(`python datageneration.py "$user" c:/temp`)
 
@@ -34,7 +34,8 @@ returns = return_calculate(prices,method="LOG",dateColumn="Date")
 println(returns)
 
 select!(returns,Not(:Date))
-covar = missing_cov(Matrix(returns),skipMiss=false,fun=cov)
+
+covar = missing_cov(Matrix(returns),skipMiss=false,fun=cor)
 
 println(DataFrame(covar,:auto))
 
@@ -61,9 +62,10 @@ println("Delta: $(callGBSM.delta)")
 println("Gamma: $(callGBSM.gamma)")
 println("Vega: $(callGBSM.vega)")
 println("NOT Rho: $(callGBSM.rho)") # Do Finite Diff here...
-fRho(rf) = gbsm(true,optParams.Underlying[1],optParams.Strike[1],optParams.TTM[1]/255,rf,optParams.RF[1]-optParams.DivRate[1],optParams.IV[1]).value
+fRho(rf) = gbsm(true,optParams.Underlying[1],optParams.Strike[1],optParams.TTM[1]/255,rf,rf-optParams.DivRate[1],optParams.IV[1]).value
 rho = FiniteDiff.finite_difference_derivative(fRho,optParams.RF[1])
 println("Actual Rho: $rho")
+# I had the Rho wrong in here initialy, everyone got 1 point added to their final grade to compensate
 
 
 iters = 1000
@@ -191,7 +193,12 @@ portfolio = DataFrame(:Asset=>["Price$i" for i in 1:4],
 models = Dict{String,FittedModel}()
 U = DataFrame()
 for v in vars
-    models[v] = fit_general_t(returns[!,v])
+    println(v)
+    try
+        models[v] = fit_general_t(returns[!,v])
+    catch
+        models[v] = fit_normal(returns[!,v])
+    end
     U[!,v] = models[v].u
 end
 
