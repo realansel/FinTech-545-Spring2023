@@ -1,7 +1,8 @@
 
 function expost_factor(w,upReturns,upFfData,Betas)
+    _upFfData = upFfData[:,:]
     stocks = names(upReturns)
-    factors = names(upFfData)
+    factors = names(_upFfData)
     
     n = size(upReturns,1)
     m = size(stocks,1)
@@ -12,7 +13,7 @@ function expost_factor(w,upReturns,upFfData,Betas)
     factorWeights = Array{Float64,2}(undef,n,length(factors))
     lastW = copy(w)
     matReturns = Matrix(upReturns[!,stocks])
-    ffReturns = Matrix(upFfData[!,factors])
+    ffReturns = Matrix(_upFfData[!,factors])
     
     for i in 1:n
         # Save Current Weights in Matrix
@@ -38,11 +39,12 @@ function expost_factor(w,upReturns,upFfData,Betas)
     
     
     # Set the portfolio return in the Update Return DataFrame
-    upFfData[!,:Alpha] = residReturn
-    upFfData[!,:Portfolio] = pReturn
+    _upFfData[!,:Alpha] = residReturn
+    _upFfData[!,:Portfolio] = pReturn
     
     # Calculate the total return
     totalRet = exp(sum(log.(pReturn .+ 1)))-1
+    println("Total Return: $totalRet")
     # Calculate the Carino K
     k = log(totalRet + 1 ) / totalRet
     
@@ -59,7 +61,7 @@ function expost_factor(w,upReturns,upFfData,Betas)
     # Loop over the factors
     for s in vcat(newFactors, :Portfolio)
         # Total Stock return over the period
-        tr = exp(sum(log.(upFfData[!,s] .+ 1)))-1
+        tr = exp(sum(log.(_upFfData[!,s] .+ 1)))-1
         # Attribution Return (total portfolio return if we are updating the portfolio column)
         atr =  s != :Portfolio ?  sum(attrib[:,s]) : tr
         # Set the values
@@ -86,5 +88,5 @@ function expost_factor(w,upReturns,upFfData,Betas)
         DataFrame(:Value=>"Vol Attribution", [Symbol(newFactors[i])=>cSD[i] for i in 1:size(newFactors,1)]... , :Portfolio=>std(pReturn))
     )
 
-    return Attribution
+    return Attribution, weights, factorWeights
 end
