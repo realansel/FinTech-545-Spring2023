@@ -20,9 +20,9 @@ include("../library/simulate.jl")
 include("../library/return_calculate.jl")
 include("../library/fitted_model.jl")
 
-ff3 = CSV.read("F-F_Research_Data_Factors_daily.CSV", DataFrame)
-mom = CSV.read("F-F_Momentum_Factor_daily.CSV",DataFrame)
-returns = CSV.read("DailyReturn.csv",DataFrame)
+ff3 = CSV.read("Week08/F-F_Research_Data_Factors_daily.CSV", DataFrame)
+mom = CSV.read("Week08/F-F_Momentum_Factor_daily.CSV",DataFrame)
+returns = CSV.read("Week08/DailyReturn.csv",DataFrame)
 
 # Join the FF3 data with the Momentum Data
 ffData = innerjoin(ff3,mom,on=:Date)

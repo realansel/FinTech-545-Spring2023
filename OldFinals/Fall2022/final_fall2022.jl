@@ -18,12 +18,12 @@ using Printf
 using StateSpaceModels
 # using GLM
 
-include("../library/RiskStats.jl")
-include("../library/simulate.jl")
-include("../library/fitted_model.jl")
-include("../library/return_calculate.jl")
-include("../library/gbsm.jl")
-include("../library/missing_cov.jl")
+include("../../library/RiskStats.jl")
+include("../../library/simulate.jl")
+include("../../library/fitted_model.jl")
+include("../../library/return_calculate.jl")
+include("../../library/gbsm.jl")
+include("../../library/missing_cov.jl")
 
 #Question #2
 rf = 0.04
@@ -64,7 +64,7 @@ println("Theta: $(-val2.theta)")
 # fwdPrices = round.(price * (1 .+ rand(Normal(0.005,0.18*sqrt(5/365)),5000)),digits=2)
 # CSV.write("question3.csv",DataFrame(:fwdPrices=>fwdPrices))
 
-fwdPrices = CSV.read("question3.csv",DataFrame).fwdPrices
+fwdPrices = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/OldFinals/Fall2022/question3.csv",DataFrame).fwdPrices
 pnl = val.value .- [ v.value for v in gbsm.(false,fwdPrices,strike,25/365,rf,rf,ivol)]
 
 density(pnl)
@@ -124,7 +124,7 @@ println("ES: $(ES(pnl))")
 # print_results(ar1)
 # CSV.write("question5.csv",DataFrame(:data=>y))
 
-y = CSV.read("question5.csv",DataFrame).data
+y = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/OldFinals/Fall2022/question5.csv",DataFrame).data
 
 function plot_ts(y;imgName="series", length=10,title=nothing)
     n = size(y,1)
@@ -155,7 +155,7 @@ plot_ts(y;imgName="question5.png", length=10,title=nothing)
 # values at 3, 6, and 9.  These fall off in the typical pattern of an AR process.  
 
 #6 
-prices = CSV.read("question6.csv",DataFrame)
+prices = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/OldFinals/Fall2022/question6.csv",DataFrame)
 prices[!,:Date] = Date.(prices.Date,dateformat"mm/dd/yyyy")
 
 returns = return_calculate(prices,dateColumn="Date")

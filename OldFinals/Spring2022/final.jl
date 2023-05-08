@@ -17,12 +17,12 @@ using LoopVectorization
 using Printf
 # using GLM
 
-include("../library/RiskStats.jl")
-include("../library/simulate.jl")
-include("../library/fitted_model.jl")
-include("../library/return_calculate.jl")
-include("../library/gbsm.jl")
-include("../library/missing_cov.jl")
+include("../../library/RiskStats.jl")
+include("../../library/simulate.jl")
+include("../../library/fitted_model.jl")
+include("../../library/return_calculate.jl")
+include("../../library/gbsm.jl")
+include("../../library/missing_cov.jl")
 
 #Question #2
 # d = Normal(0,.01*sqrt(365))
@@ -33,7 +33,7 @@ include("../library/missing_cov.jl")
 # pnl = payoff .+ pval
 
 # CSV.write("question2.csv",DataFrame(:data=>pnl))
-pnl = CSV.read("question2.csv",DataFrame).data
+pnl = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/OldFinals/Spring2022/question2.csv",DataFrame).data
 
 println("Mean: $(mean(pnl))")
 println("StDev: $(std(pnl))")
@@ -75,7 +75,7 @@ end
 # x = generate_with_missing(r,pmiss=.4)
 # CSV.write("question3.csv",DataFrame(x,[:var1, :var2, :var3]))
 
-r = CSV.read("question3.csv",DataFrame)
+r = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/OldFinals/Spring2022/question3.csv",DataFrame)
 x = Matrix(r)
 
 pairwise = missing_cov(x,skipMiss=false,fun=cor)

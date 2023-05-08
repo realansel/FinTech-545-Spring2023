@@ -19,9 +19,9 @@ include("../library/RiskStats.jl")
 include("../library/simulate.jl")
 include("../library/return_calculate.jl")
 
-ff3 = CSV.read("F-F_Research_Data_Factors_daily.CSV", DataFrame)
-mom = CSV.read("F-F_Momentum_Factor_daily.CSV",DataFrame)
-returns = CSV.read("DailyReturn.csv",DataFrame)
+ff3 = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/Week08/F-F_Research_Data_Factors_daily.CSV", DataFrame)
+mom = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/Week08/F-F_Momentum_Factor_daily.CSV",DataFrame)
+returns = CSV.read("/Users/ansel_li/FinTech-545-Spring2023/Week08/DailyReturn.csv",DataFrame)
 
 # Join the FF3 data with the Momentum Data
 ffData = innerjoin(ff3,mom,on=:Date)
