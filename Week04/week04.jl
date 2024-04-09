@@ -72,6 +72,7 @@ println("Probability of not seeing a $(round(zscore,digits=2))σ day for the lif
 # 2 identical bonds from different issuers.  4% chance of default.  1 period remaining.  $100 par value.  Price $90
 
 n=1000
+# Probability of default
 pdef = .04
 cost = 90.0
 par = 100.0
@@ -160,6 +161,7 @@ current_prices = prices[size(prices,1),:]
 returns = return_calculate(prices,dateColumn="Date")
 
 #Our portfolio
+#10,75,25 shares
 holdings = Dict{String,Float64}()
 holdings["GOOGL"] = 10
 holdings["NVDA"] = 75
@@ -182,6 +184,7 @@ for s in nm
     i+=1
 end
 
+#get weights
 delta = delta ./PV
 
 Sigma = cov(Matrix(returns))
@@ -252,7 +255,7 @@ println("Historical VaR ")
 println("Current Portfolio Value: $PV")
 println("Current Portfolio VaR: $VaR")
 
-#KDE - Get bandwidth and use a Normal Kernel 
+#KDE - Get bandwidth and use a N    ormal Kernel 
 #not super efficient but is generally more accurate
 bw = KernelDensity.default_bandwidth(pVals) 
 
